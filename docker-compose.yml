@@ -1,0 +1,25 @@
+version: '2'
+services:
+    nginx:
+      build: ./build/nginx/
+      ports:
+        - "80:80"
+      volumes_from:
+        - phpfpm
+      links:
+        - phpfpm
+    phpfpm:
+      build: ./build/phpfpm/
+      ports:
+        - "9000:9000"
+      working_dir: /var/www
+      volumes:
+        - $PWD/www:/var/www
+      links:
+        - db
+    db:
+      image: mariadb
+      ports:
+        - "3306:3306"
+      environment:
+        MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
